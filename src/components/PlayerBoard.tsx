@@ -30,6 +30,16 @@ export const PlayerBoard = () => {
         return maxI
     }, [minIndex, points])
 
+    const total = useMemo(() => {
+        var r = 0.0
+        points.forEach((p, index) => {
+            if (index !== maxIndex && index !== minIndex) {
+                r += p
+            }
+        })
+        return r
+    }, [maxIndex, minIndex, points])
+
     const handleUpDown = useCallback(
         (index: number, diff: number) => {
             const newP = points.concat()
@@ -39,18 +49,38 @@ export const PlayerBoard = () => {
         [points]
     )
 
+    const handleBase6 = useCallback(() => {
+        setPoints(Array(5).fill(6.0))
+    }, [])
+
+    const handleBase7 = useCallback(() => {
+        setPoints(Array(5).fill(7.0))
+    }, [])
+
     return (
-        <div className="flex gap-4">
-            {points.map((p, index) => (
-                <PointInput
-                    key={index}
-                    point={p}
-                    onUp={() => handleUpDown(index, -0.1)}
-                    onDown={() => handleUpDown(index, 0.1)}
-                    isMax={index === maxIndex}
-                    isMin={index === minIndex}
-                />
-            ))}
+        <div className="flex flex-col gap-2">
+            <div className="flex gap-2">
+                <button className="p-1 border" onClick={handleBase6}>
+                    6点リセット
+                </button>
+                <button className="p-1 border" onClick={handleBase7}>
+                    7点リセット
+                </button>
+            </div>
+
+            <div className="flex gap-1">
+                {points.map((p, index) => (
+                    <PointInput
+                        key={index}
+                        point={p}
+                        onUp={() => handleUpDown(index, -0.1)}
+                        onDown={() => handleUpDown(index, 0.1)}
+                        isMax={index === maxIndex}
+                        isMin={index === minIndex}
+                    />
+                ))}
+            </div>
+            <div>得点: {total.toFixed(1)}</div>
         </div>
     )
 }
