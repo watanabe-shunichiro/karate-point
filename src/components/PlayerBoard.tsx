@@ -49,22 +49,21 @@ export const PlayerBoard = () => {
         [points]
     )
 
-    const handleBase6 = useCallback(() => {
-        setPoints(Array(5).fill(6.0))
-    }, [])
-
-    const handleBase7 = useCallback(() => {
-        setPoints(Array(5).fill(7.0))
+    const handleReset = useCallback((base: number) => {
+        setPoints(Array(5).fill(base))
     }, [])
 
     return (
         <div className="flex flex-col gap-2">
             <div className="flex gap-2">
-                <button className="p-1 border" onClick={handleBase6}>
+                <button className="p-1 border" onClick={() => handleReset(6.0)}>
                     6点リセット
                 </button>
-                <button className="p-1 border" onClick={handleBase7}>
+                <button className="p-1 border" onClick={() => handleReset(7.0)}>
                     7点リセット
+                </button>
+                <button className="p-1 border" onClick={() => handleReset(8.0)}>
+                    8点リセット
                 </button>
             </div>
 
