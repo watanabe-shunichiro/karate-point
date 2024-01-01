@@ -1,10 +1,14 @@
 "use client"
 
+import { ResultState } from "@/store/ResultStore"
+import dayjs from "dayjs"
 import { useCallback, useMemo, useState } from "react"
+import { useRecoilState } from "recoil"
 import { PointInput } from "./PointInput"
 
 export const PlayerBoard = () => {
     const [points, setPoints] = useState(Array(5).fill(6.0))
+    const [result, setResult] = useRecoilState(ResultState)
 
     const minIndex = useMemo(() => {
         var min = Number.MAX_VALUE
@@ -53,6 +57,18 @@ export const PlayerBoard = () => {
         setPoints(Array(5).fill(base))
     }, [])
 
+    const handleSave = useCallback(() => {
+        const newResult = { ...result }
+        if (!newResult.date) {
+            newResult.date = dayjs()
+        }
+        const name = ""
+        const newPoints = result.playerResults.concat()
+        newPoints.push({ name, points, maxIndex, minIndex })
+        newResult.playerResults = newPoints
+        setResult(newResult)
+    }, [maxIndex, minIndex, points, result, setResult])
+
     return (
         <div className="flex flex-col gap-2">
             <div className="flex gap-2">
@@ -80,6 +96,11 @@ export const PlayerBoard = () => {
                 ))}
             </div>
             <div>得点: {total.toFixed(1)}</div>
+            <div className="flex gap-2">
+                <button className="p-1 border" onClick={handleSave}>
+                    登録
+                </button>
+            </div>
         </div>
     )
 }
