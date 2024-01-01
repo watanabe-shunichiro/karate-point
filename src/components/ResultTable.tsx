@@ -58,14 +58,18 @@ export const ResultTable = () => {
                 }
                 return (
                     <div className="flex" key={`playerResults${i}`}>
-                        <div className="border p-2 w-6">{i + 1}</div>
+                        <div className="flex items-center justify-center border w-10">
+                            <p>{i + 1}</p>
+                        </div>
                         <div className="border p-2 w-20">{r.name}</div>
                         {r.points.map((p, j) => renderPoint(r, p, i, j))}
-                        <div className="border p-2 w-15">
+                        <div className="border p-2 w-12">
                             {r.total.toFixed(1)}
                         </div>
-                        <div className={`border p-2 w-15 ${rankBg}`}>
-                            {ranks[i]}位
+                        <div
+                            className={`flex items-center justify-center border w-14 ${rankBg}`}
+                        >
+                            <p>{ranks[i]}位</p>
                         </div>
                     </div>
                 )
