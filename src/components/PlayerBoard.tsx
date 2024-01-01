@@ -105,7 +105,9 @@ export const PlayerBoard: React.FC<{ editMode: boolean }> = ({ editMode }) => {
     // 編集モードの場合は初期値を設定
     useEffect(() => {
         if (editMode) {
-            setPoints(result.playerResults[editIndex].points)
+            const player = result.playerResults[editIndex]
+            setPoints(player.points)
+            setName(player.name)
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [editIndex])

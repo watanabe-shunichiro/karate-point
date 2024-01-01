@@ -72,7 +72,8 @@ export const ResultTable = () => {
     }, [reset])
 
     const renderPlayerResult = useCallback(
-        (r: PlayerResult, i: number) => {
+        (r: PlayerResult, reversedIdx: number) => {
+            const i = results.playerResults.length - reversedIdx - 1
             let rankBg = ""
             if (ranks[i] === 1) {
                 rankBg = "bg-red-100"
@@ -131,12 +132,25 @@ export const ResultTable = () => {
                 </div>
             )
         },
-        [editIndex, handleDelete, handleEdit, ranks, renderPoint]
+        [
+            editIndex,
+            handleDelete,
+            handleEdit,
+            ranks,
+            renderPoint,
+            results.playerResults.length,
+        ]
     )
+
+    const reversed = useMemo(() => {
+        const copy = results.playerResults.concat()
+        copy.reverse()
+        return copy
+    }, [results.playerResults])
 
     return (
         <div className="flex flex-col">
-            {results.playerResults.map((r, i) => renderPlayerResult(r, i))}
+            {reversed.map((r, i) => renderPlayerResult(r, i))}
             {results.playerResults.length > 0 ? (
                 <button className="mt-4 p-1 w-24 border" onClick={handleReset}>
                     表リセット
