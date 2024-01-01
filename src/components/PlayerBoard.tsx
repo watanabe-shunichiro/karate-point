@@ -78,13 +78,13 @@ export const PlayerBoard = () => {
         <div className="flex flex-col gap-2">
             <div className="flex gap-2">
                 <button className="p-1 border" onClick={() => handleReset(6.0)}>
-                    6点リセット
+                    6点ベース
                 </button>
                 <button className="p-1 border" onClick={() => handleReset(7.0)}>
-                    7点リセット
+                    7点ベース
                 </button>
                 <button className="p-1 border" onClick={() => handleReset(8.0)}>
-                    8点リセット
+                    8点ベース
                 </button>
             </div>
 
