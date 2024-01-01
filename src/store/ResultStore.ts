@@ -18,3 +18,13 @@ export const ResultState = atom<MatchInfo>({
     key: "ResultState",
     default: { playerResults: [] },
 })
+
+export const PointBaseState = atom({
+    key: "PointBaseState",
+    default: 7,
+})
+
+export const EditIndexState = atom({
+    key: "EditIndexState",
+    default: -1,
+})

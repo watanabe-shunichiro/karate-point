@@ -1,16 +1,33 @@
 "use client"
 
-import { ResultState } from "@/store/ResultStore"
+import {
+    EditIndexState,
+    PointBaseState,
+    ResultState,
+} from "@/store/ResultStore"
 import dayjs from "dayjs"
-import { useCallback, useMemo, useState } from "react"
-import { useRecoilState } from "recoil"
+import { useCallback, useEffect, useMemo, useState } from "react"
+import { useRecoilState, useRecoilValue } from "recoil"
 import { PointInput } from "./PointInput"
 
-export const PlayerBoard = () => {
-    const [points, setPoints] = useState(Array(5).fill(6.0))
+export const PlayerBoard: React.FC<{ editMode: boolean }> = ({ editMode }) => {
+    const base = useRecoilValue(PointBaseState)
     const [result, setResult] = useRecoilState(ResultState)
+    const [editIndex, setEditIndex] = useRecoilState(EditIndexState)
+
+    const [points, setPoints] = useState(Array(5).fill(base))
     const [name, setName] = useState("")
-    const [base, setBase] = useState(6)
+
+    const reset = useCallback(() => {
+        setPoints(Array(5).fill(base))
+        setName("")
+    }, [base])
+
+    // 基準が変更されたらリセット
+    useEffect(() => {
+        reset()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [base])
 
     const minIndex = useMemo(() => {
         var min = Number.MAX_VALUE
@@ -55,39 +72,46 @@ export const PlayerBoard = () => {
         [points]
     )
 
-    const handleReset = useCallback((newBase: number) => {
-        setPoints(Array(5).fill(newBase))
-        setBase(newBase)
-        setName("")
-    }, [])
-
     const handleSave = useCallback(() => {
         const newResult = { ...result }
         if (!newResult.date) {
             newResult.date = dayjs()
         }
         const newPoints = result.playerResults.concat()
-        newPoints.push({ name, points, maxIndex, minIndex, total })
+        const newPoint = { name, points, maxIndex, minIndex, total }
+        if (editMode) {
+            newPoints[editIndex] = newPoint
+            setEditIndex(-1)
+        } else {
+            newPoints.push(newPoint)
+        }
         newResult.playerResults = newPoints
         setResult(newResult)
-        setPoints(Array(5).fill(base))
-        setName("")
-    }, [base, maxIndex, minIndex, name, points, result, setResult, total])
+        reset()
+    }, [
+        editIndex,
+        editMode,
+        maxIndex,
+        minIndex,
+        name,
+        points,
+        reset,
+        result,
+        setEditIndex,
+        setResult,
+        total,
+    ])
+
+    // 編集モードの場合は初期値を設定
+    useEffect(() => {
+        if (editMode) {
+            setPoints(result.playerResults[editIndex].points)
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [editIndex])
 
     return (
         <div className="flex flex-col gap-2">
-            <div className="flex gap-2">
-                <button className="p-1 border" onClick={() => handleReset(6.0)}>
-                    6点ベース
-                </button>
-                <button className="p-1 border" onClick={() => handleReset(7.0)}>
-                    7点ベース
-                </button>
-                <button className="p-1 border" onClick={() => handleReset(8.0)}>
-                    8点ベース
-                </button>
-            </div>
-
             <div className="flex gap-1">
                 {points.map((p, index) => (
                     <PointInput
@@ -110,7 +134,7 @@ export const PlayerBoard = () => {
                     onChange={(e) => setName(e.target.value)}
                 ></input>
                 <button className="p-1 border" onClick={handleSave}>
-                    登録
+                    {editMode ? "更新" : "登録"}
                 </button>
             </div>
         </div>
