@@ -131,7 +131,7 @@ export const ResultTable = () => {
                 </div>
             )
         },
-        [editIndex, handleEdit, ranks, renderPoint]
+        [editIndex, handleDelete, handleEdit, ranks, renderPoint]
     )
 
     return (
