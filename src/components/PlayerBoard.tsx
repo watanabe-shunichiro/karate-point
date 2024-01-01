@@ -9,6 +9,8 @@ import { PointInput } from "./PointInput"
 export const PlayerBoard = () => {
     const [points, setPoints] = useState(Array(5).fill(6.0))
     const [result, setResult] = useRecoilState(ResultState)
+    const [name, setName] = useState("")
+    const [base, setBase] = useState(6)
 
     const minIndex = useMemo(() => {
         var min = Number.MAX_VALUE
@@ -53,8 +55,10 @@ export const PlayerBoard = () => {
         [points]
     )
 
-    const handleReset = useCallback((base: number) => {
-        setPoints(Array(5).fill(base))
+    const handleReset = useCallback((newBase: number) => {
+        setPoints(Array(5).fill(newBase))
+        setBase(newBase)
+        setName("")
     }, [])
 
     const handleSave = useCallback(() => {
@@ -62,12 +66,13 @@ export const PlayerBoard = () => {
         if (!newResult.date) {
             newResult.date = dayjs()
         }
-        const name = ""
         const newPoints = result.playerResults.concat()
-        newPoints.push({ name, points, maxIndex, minIndex })
+        newPoints.push({ name, points, maxIndex, minIndex, total })
         newResult.playerResults = newPoints
         setResult(newResult)
-    }, [maxIndex, minIndex, points, result, setResult])
+        setPoints(Array(5).fill(base))
+        setName("")
+    }, [base, maxIndex, minIndex, name, points, result, setResult, total])
 
     return (
         <div className="flex flex-col gap-2">
@@ -96,7 +101,14 @@ export const PlayerBoard = () => {
                 ))}
             </div>
             <div>得点: {total.toFixed(1)}</div>
-            <div className="flex gap-2">
+            <div className="flex gap-2 items-center">
+                <div>名前:</div>
+                <input
+                    className="border"
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                ></input>
                 <button className="p-1 border" onClick={handleSave}>
                     登録
                 </button>
