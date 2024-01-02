@@ -7,6 +7,7 @@ export type PlayerResult = {
     maxIndex: number
     minIndex: number
     total: number
+    rank?: number
 }
 
 export type MatchInfo = {

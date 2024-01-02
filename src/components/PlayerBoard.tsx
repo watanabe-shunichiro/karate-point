@@ -2,6 +2,7 @@
 
 import {
     EditIndexState,
+    PlayerResult,
     PointBaseState,
     ResultState,
 } from "@/store/ResultStore"
@@ -72,25 +73,44 @@ export const PlayerBoard: React.FC<{ editMode: boolean }> = ({ editMode }) => {
         [points]
     )
 
+    const getRanks = useCallback((players: PlayerResult[]) => {
+        const indexes: number[] = Array.from(
+            { length: players.length },
+            (_, i) => i
+        )
+
+        indexes.sort((a, b) => players[b].total - players[a].total)
+
+        return Array.from(
+            { length: players.length },
+            (_, i) => indexes.indexOf(i) + 1
+        )
+    }, [])
+
     const handleSave = useCallback(() => {
         const newResult = { ...result }
         if (!newResult.date) {
             newResult.date = dayjs()
         }
-        const newPoints = result.playerResults.concat()
+        const tmpPlayerResults = result.playerResults.concat()
         const newPoint = { name, points, maxIndex, minIndex, total }
         if (editMode) {
-            newPoints[editIndex] = newPoint
+            tmpPlayerResults[editIndex] = newPoint
             setEditIndex(-1)
         } else {
-            newPoints.push(newPoint)
+            tmpPlayerResults.push(newPoint)
         }
-        newResult.playerResults = newPoints
+        const ranks = getRanks(tmpPlayerResults)
+        const newPlayerResults = tmpPlayerResults.map((r, index) => {
+            return { ...r, rank: ranks[index] }
+        })
+        newResult.playerResults = newPlayerResults
         setResult(newResult)
         reset()
     }, [
         editIndex,
         editMode,
+        getRanks,
         maxIndex,
         minIndex,
         name,

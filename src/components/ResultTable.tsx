@@ -8,21 +8,6 @@ export const ResultTable = () => {
     const reset = useResetRecoilState(ResultState)
     const [editIndex, setEditIndex] = useRecoilState(EditIndexState)
 
-    const ranks = useMemo(() => {
-        const players = results.playerResults
-        const indexes: number[] = Array.from(
-            { length: players.length },
-            (_, i) => i
-        )
-
-        indexes.sort((a, b) => players[b].total - players[a].total)
-
-        return Array.from(
-            { length: players.length },
-            (_, i) => indexes.indexOf(i) + 1
-        )
-    }, [results.playerResults])
-
     const renderPoint = useCallback(
         (r: PlayerResult, p: number, i: number, j: number) => {
             let bgColor = "bg-gray-100"
@@ -75,11 +60,11 @@ export const ResultTable = () => {
         (r: PlayerResult, reversedIdx: number) => {
             const i = results.playerResults.length - reversedIdx - 1
             let rankBg = ""
-            if (ranks[i] === 1) {
+            if (r.rank === 1) {
                 rankBg = "bg-red-100"
-            } else if (ranks[i] === 2) {
+            } else if (r.rank === 2) {
                 rankBg = "bg-yellow-200"
-            } else if (ranks[i] === 3) {
+            } else if (r.rank === 3) {
                 rankBg = "bg-yellow-200"
             }
             return (
@@ -96,7 +81,7 @@ export const ResultTable = () => {
                         <div
                             className={`flex items-center justify-center border w-14 ${rankBg}`}
                         >
-                            <p>{ranks[i]}位</p>
+                            <p>{r.rank}位</p>
                         </div>
                         <div className="pl-2">
                             {editIndex === i ? (
@@ -136,7 +121,6 @@ export const ResultTable = () => {
             editIndex,
             handleDelete,
             handleEdit,
-            ranks,
             renderPoint,
             results.playerResults.length,
         ]
