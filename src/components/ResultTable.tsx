@@ -8,29 +8,32 @@ export const ResultTable = () => {
     const reset = useResetRecoilState(ResultState)
     const [editNo, setEditNo] = useRecoilState(EditNoState)
 
-    const renderPoint = useCallback((r: PlayerResult, p: number, i: number) => {
-        let bgColor = "bg-gray-100"
-        if (i == r.maxIndex) {
-            bgColor = "bg-red-100"
-        } else if (i === r.minIndex) {
-            bgColor = "bg-blue-100"
-        }
-        return (
-            <div
-                className={`p-2 w-10 border ${bgColor}`}
-                key={`playerResults${r.no}-${i}`}
-            >
-                {p.toFixed(1)}
-            </div>
-        )
-    }, [])
+    const renderPoint = useCallback(
+        (r: PlayerResult, point: number, i: number) => {
+            let bgColor = "bg-gray-100"
+            if (i == r.maxIndex) {
+                bgColor = "bg-red-100"
+            } else if (i === r.minIndex) {
+                bgColor = "bg-blue-100"
+            }
+            return (
+                <div
+                    className={`p-2 w-10 border ${bgColor}`}
+                    key={`playerResults${r.no}-${i}`}
+                >
+                    {point.toFixed(1)}
+                </div>
+            )
+        },
+        []
+    )
 
     const handleEdit = useCallback(
-        (i: number) => {
-            if (editNo === i) {
+        (no: number) => {
+            if (editNo === no) {
                 setEditNo(-1)
             } else {
-                setEditNo(i)
+                setEditNo(no)
             }
         },
         [editNo, setEditNo]
@@ -53,7 +56,9 @@ export const ResultTable = () => {
     )
 
     const handleReset = useCallback(() => {
-        reset()
+        if (confirm("表をリセットしますか？")) {
+            reset()
+        }
     }, [reset])
 
     const renderPlayerResult = useCallback(
@@ -129,7 +134,10 @@ export const ResultTable = () => {
         <div className="flex flex-col">
             {viewResults.map((r) => renderPlayerResult(r))}
             {results.playerResults.length > 0 ? (
-                <button className="mt-4 p-1 w-24 border" onClick={handleReset}>
+                <button
+                    className="mt-4 p-1 w-24 border bg-orange-100"
+                    onClick={handleReset}
+                >
                     表リセット
                 </button>
             ) : undefined}

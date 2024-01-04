@@ -174,7 +174,10 @@ export const PlayerBoard: React.FC<{ editMode: boolean }> = ({ editMode }) => {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                 ></input>
-                <button className="p-1 border" onClick={handleSave}>
+                <button
+                    className="p-1 border bg-green-100"
+                    onClick={handleSave}
+                >
                     {editMode ? "更新" : "登録"}
                 </button>
             </div>
