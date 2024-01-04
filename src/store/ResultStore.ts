@@ -2,6 +2,7 @@ import { Dayjs } from "dayjs"
 import { atom } from "recoil"
 
 export type PlayerResult = {
+    no: number
     name: string
     points: number[]
     maxIndex: number
@@ -25,7 +26,7 @@ export const PointBaseState = atom({
     default: 7,
 })
 
-export const EditIndexState = atom({
-    key: "EditIndexState",
+export const EditNoState = atom({
+    key: "EditNoState",
     default: -1,
 })

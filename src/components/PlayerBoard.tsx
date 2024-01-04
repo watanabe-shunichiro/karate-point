@@ -1,7 +1,7 @@
 "use client"
 
 import {
-    EditIndexState,
+    EditNoState,
     PlayerResult,
     PointBaseState,
     ResultState,
@@ -14,7 +14,7 @@ import { PointInput } from "./PointInput"
 export const PlayerBoard: React.FC<{ editMode: boolean }> = ({ editMode }) => {
     const base = useRecoilValue(PointBaseState)
     const [result, setResult] = useRecoilState(ResultState)
-    const [editIndex, setEditIndex] = useRecoilState(EditIndexState)
+    const [editNo, setEditNo] = useRecoilState(EditNoState)
 
     const [points, setPoints] = useState(Array(5).fill(base))
     const [name, setName] = useState("")
@@ -93,11 +93,28 @@ export const PlayerBoard: React.FC<{ editMode: boolean }> = ({ editMode }) => {
             newResult.date = dayjs()
         }
         const tmpPlayerResults = result.playerResults.concat()
-        const newPoint = { name, points, maxIndex, minIndex, total }
         if (editMode) {
-            tmpPlayerResults[editIndex] = newPoint
-            setEditIndex(-1)
+            result.playerResults.some((p, index) => {
+                if (p.no === editNo) {
+                    const newPoint = {
+                        no: p.no,
+                        name,
+                        points,
+                        maxIndex,
+                        minIndex,
+                        total,
+                    }
+                    tmpPlayerResults[index] = newPoint
+                    setEditNo(-1)
+                    return true
+                }
+            })
         } else {
+            let no = 1
+            if (tmpPlayerResults.length > 0) {
+                no = tmpPlayerResults[tmpPlayerResults.length - 1].no + 1
+            }
+            const newPoint = { no, name, points, maxIndex, minIndex, total }
             tmpPlayerResults.push(newPoint)
         }
         const ranks = getRanks(tmpPlayerResults)
@@ -108,7 +125,7 @@ export const PlayerBoard: React.FC<{ editMode: boolean }> = ({ editMode }) => {
         setResult(newResult)
         reset()
     }, [
-        editIndex,
+        editNo,
         editMode,
         getRanks,
         maxIndex,
@@ -117,7 +134,7 @@ export const PlayerBoard: React.FC<{ editMode: boolean }> = ({ editMode }) => {
         points,
         reset,
         result,
-        setEditIndex,
+        setEditNo,
         setResult,
         total,
     ])
@@ -125,12 +142,14 @@ export const PlayerBoard: React.FC<{ editMode: boolean }> = ({ editMode }) => {
     // 編集モードの場合は初期値を設定
     useEffect(() => {
         if (editMode) {
-            const player = result.playerResults[editIndex]
-            setPoints(player.points)
-            setName(player.name)
+            const player = result.playerResults.find((p) => p.no === editNo)
+            if (player) {
+                setPoints(player.points)
+                setName(player.name)
+            }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [editIndex])
+    }, [editNo])
 
     return (
         <div className="flex flex-col gap-2">
