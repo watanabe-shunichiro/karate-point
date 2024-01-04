@@ -1,11 +1,7 @@
 "use client"
 
-import {
-    EditNoState,
-    PlayerResult,
-    PointBaseState,
-    ResultState,
-} from "@/store/ResultStore"
+import { EditNoState, PointBaseState } from "@/store/UIStateStore"
+import { PlayerResult, useResults } from "@/store/useResults"
 import dayjs from "dayjs"
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { useRecoilState, useRecoilValue } from "recoil"
@@ -13,7 +9,7 @@ import { PointInput } from "./PointInput"
 
 export const PlayerBoard: React.FC<{ editMode: boolean }> = ({ editMode }) => {
     const base = useRecoilValue(PointBaseState)
-    const [result, setResult] = useRecoilState(ResultState)
+    const [result, setResult] = useResults()
     const [editNo, setEditNo] = useRecoilState(EditNoState)
 
     const [points, setPoints] = useState(Array(5).fill(base))

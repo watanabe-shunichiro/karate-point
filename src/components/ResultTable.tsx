@@ -1,11 +1,15 @@
-import { EditNoState, PlayerResult, ResultState } from "@/store/ResultStore"
+import { EditNoState } from "@/store/UIStateStore"
+import {
+    PlayerResult,
+    resultStateDefault,
+    useResults,
+} from "@/store/useResults"
 import { useCallback, useMemo } from "react"
-import { useRecoilState, useResetRecoilState } from "recoil"
+import { useRecoilState } from "recoil"
 import { PlayerBoard } from "./PlayerBoard"
 
 export const ResultTable = () => {
-    const [results, setResults] = useRecoilState(ResultState)
-    const reset = useResetRecoilState(ResultState)
+    const [results, setResults] = useResults()
     const [editNo, setEditNo] = useRecoilState(EditNoState)
 
     const renderPoint = useCallback(
@@ -57,9 +61,9 @@ export const ResultTable = () => {
 
     const handleReset = useCallback(() => {
         if (confirm("表をリセットしますか？")) {
-            reset()
+            setResults(resultStateDefault)
         }
-    }, [reset])
+    }, [setResults])
 
     const renderPlayerResult = useCallback(
         (r: PlayerResult) => {

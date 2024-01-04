@@ -1,4 +1,4 @@
-import { PointBaseState } from "@/store/ResultStore"
+import { PointBaseState } from "@/store/UIStateStore"
 import { useSetRecoilState } from "recoil"
 
 export const PointBase = () => {
