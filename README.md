@@ -1,17 +1,22 @@
 # 空手用得点計算用アプリ
 
-形試合での得点計算を補助する Web アプリ
+形試合での得点計算を補助する Web アプリ。https://karate-point.vercel.app/
 
 -   最高得点と最低得点を省いて合計点を計算
 
 ## 使用技術
 
--   Next.js
--   TypeScript
--   lint
--   tailwind
--   recoil
--   dayjs
+-   言語
+    -   TypeScript
+-   フレームワーク
+    -   Next.js
+    -   tailwind
+-   状態管理
+    -   recoil
+    -   recoil-persist
+-   ライブラリ
+    -   lint
+    -   dayjs
 
 ## 開発環境構築手順
 
@@ -20,6 +25,6 @@ $ yarn
 $ yarn dev
 ```
 
-## 本番環境
+## Hosting
 
--   vercel と連動　https://karate-point.vercel.app/
+-   vercel を使用

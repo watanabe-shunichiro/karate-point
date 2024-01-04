@@ -1,5 +1,8 @@
 import { Dayjs } from "dayjs"
 import { atom } from "recoil"
+import { recoilPersist } from "recoil-persist"
+
+const { persistAtom } = recoilPersist()
 
 export type PlayerResult = {
     no: number
@@ -19,6 +22,7 @@ export type MatchInfo = {
 export const ResultState = atom<MatchInfo>({
     key: "ResultState",
     default: { playerResults: [] },
+    effects_UNSTABLE: [persistAtom],
 })
 
 export const PointBaseState = atom({
